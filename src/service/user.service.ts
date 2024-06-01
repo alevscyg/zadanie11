@@ -16,7 +16,8 @@ export class UserService {
     }
 
     getUserById = async(id: number) => {
-        return await this.userRepository.findOneBy({id});
+        return await this.userRepository.findOneBy({id})
+        .catch(err => console.log(err));
     }
 
     deleteUserById = async(id: number) => {
