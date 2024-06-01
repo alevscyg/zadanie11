@@ -6,9 +6,8 @@ export class UserService {
     constructor(private userRepository = myDataSource.getRepository(User)){}
 
     createUser = async(dto: UserDto) => {
-        const newUser = this.userRepository.create({name: dto.name, age: dto.age});
-        await this.userRepository.save(newUser);
-        return newUser;
+        return await this.userRepository.save(dto)
+        .catch(err => console.log(err));
     }
 
     getUsers = async() => {
