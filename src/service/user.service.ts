@@ -17,15 +17,15 @@ export class UserService {
     getUsers = async() => {
         return await myDataSource
         .getRepository(User)
-        .createQueryBuilder("user")
+        .createQueryBuilder()
         .getMany();
     }
 
     getUserById = async(id: number) => {
         return await myDataSource
         .getRepository(User)
-        .createQueryBuilder("user")
-        .where(`user.id = :id`, { id: id })
+        .createQueryBuilder()
+        .where(`id = :id`, { id: id })
         .getOneOrFail();
     }
 
