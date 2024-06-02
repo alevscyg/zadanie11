@@ -6,32 +6,44 @@ export class UserService {
     constructor(private userRepository = myDataSource.getRepository(User)){}
 
     createUser = async(dto: UserDto) => {
-        return await this.userRepository.save(dto)
-        .catch(err => console.log(err));
+        return await myDataSource
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values([dto])
+        .execute();
     }
 
     getUsers = async() => {
-        return await this.userRepository.find()
-        .catch(err => console.log(err));
+        return await myDataSource
+        .getRepository(User)
+        .createQueryBuilder("user")
+        .getMany();
     }
 
     getUserById = async(id: number) => {
-        return await this.userRepository.findOneBy({id})
-        .catch(err => console.log(err));
+        return await myDataSource
+        .getRepository(User)
+        .createQueryBuilder("user")
+        .where(`user.id = :id`, { id: id })
+        .getOneOrFail();
     }
 
     deleteUserById = async(id: number) => {
-        const result = await this.userRepository.delete(id);
-        return result.affected ? `Пользователь с id = ${id} был удален`: "Пользователь не найден";
+        return await myDataSource
+        .createQueryBuilder()
+        .delete()
+        .from(User)
+        .where("id = :id", { id: id })
+        .execute();
     }
 
     updateUser = async(dto: UserDto, id: number) => {
-        const user = await this.userRepository.findOneBy({id})
-        if(!user) {
-            return `Пользователь с id = ${id} не найден`;
-        }
-        this.userRepository.merge(user, dto);
-        await this.userRepository.save(user);
-        return user;
+        return await myDataSource
+        .createQueryBuilder()
+        .update(User)
+        .set({ name: dto.name , age: dto.age })
+        .where("id = :id", { id: id })
+        .execute();
     }
 }
