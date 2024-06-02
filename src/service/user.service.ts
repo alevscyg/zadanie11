@@ -3,8 +3,7 @@ import { User } from "../User.model"
 import { UserDto } from "../dto/create.user.dto"
 
 export class UserService {
-    constructor(private userRepository = myDataSource.getRepository(User)){}
-
+    
     createUser = async(dto: UserDto) => {
         return await myDataSource
         .createQueryBuilder()
